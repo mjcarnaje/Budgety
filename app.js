@@ -14,8 +14,28 @@ var budgetController = (function () {
 		this.value = value;
 	};
 
+	// we create a function that calculate the sum of the input data(value) and also input the data dependingif it is inc or exp
+	var calculateTotal = function (type) {
+		var sum = 0;
+		data.allItems[type].forEach(function (cur) {
+			sum += cur.value; //cur = income || expense
+		});
+		data.total[type] = sum; // store the income or expenses to the data.total object
+
+		/*
+			0 
+			[100, 200, 300]
+			sum = 0 + 100
+			sum = 100 + 200
+			sum = 300 + 300
+			sum = 600
+		*/
+	};
+
 	// var allExpenses = [];
 	// var allIncomes = [];
+	// allExpenses: [];
+	// llIncomes: [];
 
 	var data = {
 		allItems: {
@@ -23,11 +43,11 @@ var budgetController = (function () {
 			inc: [], // type
 		},
 		total: {
-			exp: [], // type
-			inc: [], // type
+			exp: 0, // type
+			inc: 0, // type
 		},
-		// allExpenses: [];
-		// llIncomes: [];
+		budget: 0, // the the function (inc - exp) will be stored here because we called it in the public
+		percentage: -1, // usually a value that we use to say that something is not existed because the income and the expenses are set to zero
 	};
 
 	return {
@@ -56,6 +76,31 @@ var budgetController = (function () {
 
 			// Return the new element
 			return newItem;
+		},
+		calculateBudget: function () {
+			// calculate total income and expeses
+			calculateTotal('exp');
+			calculateTotal('inc');
+			// calculate the budget: income - expenses
+			data.budget = data.total.inc - data.total.exp;
+
+			// calculate the percentage of income that we spent
+
+			if (data.total.inc > 0) {
+				data.percentage = Math.round((data.total.exp / data.total.inc) * 100);
+			} else {
+				data.percentage = -1;
+			}
+
+			/* example: expenses = 100 and income 200, spent 50% = 100/200 = .5 * 100 */
+		},
+		getBudget: function () {
+			return {
+				budget: data.budget,
+				totalInc: data.total.inc,
+				totalExp: data.total.exp,
+				percentage: data.percentage,
+			};
 		},
 		testing: function () {
 			console.log(data);
@@ -151,8 +196,11 @@ var controller = (function (budgetCtrl, UICtrl) {
 
 	var updateBudget = function () {
 		// 5. Calcualte the budget
+		budgetCtrl.calculateBudget();
 		// 6. return the budget
+		var budget = budgetCtrl.getBudget();
 		// 7. Display the budget  into the UI
+		console.log(budget);
 	};
 
 	// Main functions;
@@ -176,7 +224,7 @@ var controller = (function (budgetCtrl, UICtrl) {
 			// 5. Calculate and update the budget into the UI
 			updateBudget();
 		} else {
-			alert;
+			alert('Provide all the details');
 		}
 	};
 	return {
