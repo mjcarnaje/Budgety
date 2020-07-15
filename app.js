@@ -22,7 +22,7 @@ var budgetController = (function () {
 		});
 		data.total[type] = sum; // store the income or expenses to the data.total object
 
-		/*
+		/* 
 			0 
 			[100, 200, 300]
 			sum = 0 + 100
@@ -117,9 +117,14 @@ var UIController = (function () {
 		inputDescription: '.add__description',
 		inputValue: '.add__value',
 		inputButton: '.add__btn',
-		//new
+		//html
 		incomeContainer: '.income__list',
 		expensesContainer: '.expenses__list',
+		//budget controller
+		budgetLabel: '.budget__value',
+		incomeLabel: '.budget__income--value',
+		expensesLabel: '.budget__expenses--value',
+		percentageLabel: '.budget__expenses--percentage',
 	};
 
 	// THIS WILL GO TO THE PUBLIC
@@ -171,6 +176,18 @@ var UIController = (function () {
 			fieldArr[0].focus();
 		},
 
+		displayBudget: function (obj) {
+			document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
+			document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
+			document.querySelector(DOMstrings.expensesLabel).textContent = obj.totalExp;
+
+			if (obj.percentage > 0) {
+				document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage + '%';
+			} else {
+				document.querySelector(DOMstrings.percentageLabel).textContent = '---';
+			}
+		},
+
 		getDOMStrings: function () {
 			return DOMstrings;
 		},
@@ -200,7 +217,7 @@ var controller = (function (budgetCtrl, UICtrl) {
 		// 6. return the budget
 		var budget = budgetCtrl.getBudget();
 		// 7. Display the budget  into the UI
-		console.log(budget);
+		UICtrl.displayBudget(budget);
 	};
 
 	// Main functions;
@@ -231,6 +248,13 @@ var controller = (function (budgetCtrl, UICtrl) {
 		init: function () {
 			console.log('God is great!'); // testing
 			setupEventListeners(); // call the setup even listener
+
+			UICtrl.displayBudget({
+				budget: 0,
+				totalInc: 0,
+				totalExp: 0,
+				percentage: -1,
+			});
 		},
 	};
 })(budgetController, UIController);
