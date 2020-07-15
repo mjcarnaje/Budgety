@@ -89,8 +89,10 @@ var budgetController = (function () {
 			});
 
 			index = ids.indexOf(id);
+			// -1 if when we didn't find the element
 			if (index !== -1) {
 				data.allItems[type].splice(index, 1);
+				// splice - remove the element
 			}
 		},
 		calculateBudget: function () {
@@ -119,7 +121,7 @@ var budgetController = (function () {
 			};
 		},
 		testing: function () {
-			console.log(data);
+			return data;
 		},
 	};
 })();
@@ -179,6 +181,10 @@ var UIController = (function () {
 			//Insert the HTML into the DOM
 			document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
 		},
+		deleteListItem: function (selectorID) {
+			var el = document.getElementById(selectorID);
+			el.parentNode.removeChild(el);
+		},
 		// clear the fields after submitting
 		clearFields: function () {
 			var fields, fieldArr;
@@ -186,6 +192,7 @@ var UIController = (function () {
 			fields = document.querySelectorAll(DOMstrings.inputDescription + ',' + DOMstrings.inputValue);
 
 			fieldArr = Array.prototype.slice.call(fields);
+			// slice - is just to create copy
 
 			fieldArr.forEach(function (current, index, array) {
 				current.value = '';
@@ -267,22 +274,24 @@ var controller = (function (budgetCtrl, UICtrl) {
 
 	var ctrlDeleteItem = function (e) {
 		var itemID, splitID, type, ID;
-		itemID = e.target.parentNode.parentNode.parentNode.parentNode.id;
-		//it will get the id
 
-		console.log(itemID);
+		//it will get the id
+		itemID = e.target.parentNode.parentNode.parentNode.parentNode.id;
 
 		if (itemID) {
+			// 0) split the id name and store it in a separate variable so that we can use it as an argument
 			splitID = itemID.split('-');
 			type = splitID[0];
 			ID = parseInt(splitID[1]);
 
 			// 1) delete the item to the data structure
-
 			budgetCtrl.deleteItem(type, ID);
 
-			// 2) delte the item to the user interface;
+			// 2) delete the item to the user interface;
+			UICtrl.deleteListItem(itemID);
+
 			// 3) update and show the new budget
+			updateBudget();
 		}
 	};
 
