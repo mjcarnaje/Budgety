@@ -174,16 +174,23 @@ var UIController = (function () {
 		expensesPercentageLabel: '.item__percentage',
 	};
 
-	var formatNumber = function (num, type) {
-		// + or -
-		// excatly 2 decimal points
-		// comma separator
+	//better version of formating numbers
+
+	var formatNumber = function format2(num, type) {
+		return (type === 'exp' ? '-' : '+') + ' ' + num.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+	};
+
+	/* 
+	var formatNumbers = function (num, type) {
+		/ + or -
+		/ excatly 2 decimal points
+		/ comma separator
 
 		var numSplit, int, dec;
 
-		// removes the sign of th number
+		/ removes the sign of th number
 		num = Math.abs(num);
-		// toFixed - method of number prototype - converts into object - exactly 2 decimal
+		/ toFixed - method of number prototype - converts into object - exactly 2 decimal
 		num = num.toFixed(2);
 
 		numSplit = num.split('.');
@@ -194,10 +201,10 @@ var UIController = (function () {
 		}
 
 		dec = numSplit[1];
-		//type === 'exp' ? sign = '-' : sign = '+';
+		/type === 'exp' ? sign = '-' : sign = '+';
 		return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec;
 	};
-
+	*/
 	// THIS WILL GO TO THE PUBLIC
 	return {
 		// All the input that the user input;
