@@ -172,6 +172,8 @@ var UIController = (function () {
 		container: '.container',
 		//update percetnage
 		expensesPercentageLabel: '.item__percentage',
+		//date
+		dateLabel: '.budget__title--month',
 	};
 
 	//better version of formating numbers
@@ -264,7 +266,7 @@ var UIController = (function () {
 			obj.budget > 0 ? (type = 'inc') : (type = 'exp');
 
 			document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(obj.budget, type);
-			document.querySelector(DOMstrings.incomeLabel).textContent = fotmatNumber(obj.totalInc, 'inc');
+			document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(obj.totalInc, 'inc');
 			document.querySelector(DOMstrings.expensesLabel).textContent = formatNumber(obj.totalExp, 'exp');
 
 			if (obj.percentage > 0) {
@@ -290,6 +292,29 @@ var UIController = (function () {
 					current.textContent = '---';
 				}
 			});
+		},
+
+		displayDate: function () {
+			var now, month, months, year;
+
+			now = new Date();
+			months = [
+				'Januraty',
+				'Febuary',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December',
+			];
+			year = now.getFullYear();
+			month = now.getMonth();
+			document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
 		},
 
 		getDOMStrings: function () {
@@ -395,6 +420,8 @@ var controller = (function (budgetCtrl, UICtrl) {
 		init: function () {
 			console.log('God is great!'); // testing
 			setupEventListeners(); // call the setup even listener
+
+			UICtrl.displayDate();
 
 			// as soon as you open the website
 			UICtrl.displayBudget({
